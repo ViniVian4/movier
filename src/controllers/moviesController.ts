@@ -3,7 +3,7 @@ import reviewSchema from "../schemas/reviewSchema.js"
 import {Request, Response } from "express"
 import { Movie } from "../protocols/movie"
 import { Review } from "../protocols/review"
-import { insertUnique, readAll, updateStatus, deleteOne } from "../repositories/movieRepository.js"
+import { insertUnique, readAll, updateStatus, deleteOne, readMoviesByPlatform } from "../repositories/movieRepository.js"
 import { insertNewReview } from "../repositories/reviewRepository.js"
 
 async function postMovie(req: Request, res: Response) {
@@ -68,12 +68,13 @@ async function deleteMovie(req: Request, res: Response) {
     return res.sendStatus(200);
 }
 
-async function getMovieByPlatform(req: Request, res: Response) {
-    const movieId : number = Number(req.params.id);
+async function getMovieQuantityByPlatform(req: Request, res: Response) {
     const platform : string = req.params.platform;
 
     try {
-        
+        const filteredMovies = await readMoviesByPlatform(platform);
+
+        return res.status(200).send(String(filteredMovies.rowCount));
     } catch (error) {
         return res.sendStatus(500);
     }
@@ -83,5 +84,6 @@ export {
     postMovie,
     getAllMovies,
     watchMovie,
-    deleteMovie
+    deleteMovie,
+    getMovieQuantityByPlatform
 }

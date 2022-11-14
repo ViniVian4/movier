@@ -21,9 +21,15 @@ async function deleteOne(movieId: number) {
     [movieId]);
 }
 
+async function readMoviesByPlatform(platform: string): Promise<QueryResult<MovieEntity>> {
+    return connection.query(`SELECT * FROM movies WHERE platform=$1`,
+    [platform]);
+}
+
 export {
     insertUnique,
     readAll,
     updateStatus,
-    deleteOne
+    deleteOne,
+    readMoviesByPlatform
 }
